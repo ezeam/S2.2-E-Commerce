@@ -70,19 +70,37 @@ var products = [
 // ** Don't hesitate to seek help from your peers or your mentor if you still struggle with debugging.
 
 // Improved version of cartList. Cart is an array of products (objects), but each one has a quantity field to define its quantity, so these products are not repeated.
-var cart = [];
+var cart = [
+    
+];
 
 var total = 0;
 
 // Exercise 1
 function buy(id) {
     // 1. Loop for to the array products to get the item to add to cart
+    let found = products.find(product => product.id === id);
+    console.log("Objeto que queremos añadir al carrito: ", found);
     // 2. Add found product to the cart array
+    let indice = cart.findIndex((producto) => producto.id == id);
+    if(indice == -1){
+        console.log("NO he encontrado un objeto con el mismo id en cart");
+        found = Object.assign({quantity: 1}, found);
+        console.log("Objeto con la quantity añadida", found);
+        cart.push(found);
+        console.log("Array cart con quantity", cart);
+    }else{        
+        cart[indice].quantity++;
+        console.log("He encontrado un objeto con el mismo id en cart", cart);
+    }  
 }
 
 // Exercise 2
 function cleanCart() {
-
+    cart = [
+    
+    ];
+    console.log(cart); //NO DESAPARECEN LOS ARTÍCULOS DEL CARRITO, PERO SI QUE VACÍA LA ARRAY Y LA INICIALIZA
 }
 
 // Exercise 3
