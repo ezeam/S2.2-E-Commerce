@@ -70,17 +70,17 @@ var products = [
 // ** Don't hesitate to seek help from your peers or your mentor if you still struggle with debugging.
 
 // Improved version of cartList. Cart is an array of products (objects), but each one has a quantity field to define its quantity, so these products are not repeated.
-var cart = [{quantity: 2, id: 9, name: 'Toddler Frock', price: 9.99, type: 'clothes'}, {quantity: 1, id: 7, name: 'Lawn Dress', price: 15, 
-type: 'clothes'}, {quantity: 4, id: 6, name: 'Lip Tints', price: 12.75, type: 'beauty'}, {quantity: 3, id: 1, name: 'cooking oil', price: 10.5,
-type: 'grocery', offer: {number: 3, percent: 20}}, {quantity: 11, id: 3, name: 'Instant cupcake mixture', price: 5, type: 'grocery',offer: {
-number: 10, percent: 30}}];
+var cart = [];
 /*Datos de prueba {quantity: 2, id: 9, name: 'Toddler Frock', price: 9.99, type: 'clothes'}, {quantity: 1, id: 7, name: 'Lawn Dress', price: 15, 
-type: 'clothes'}, {quantity: 4, id: 6, name: 'Lip Tints', price: 12.75, type: 'beauty'}, {quantity: 3, id: 1, name: 'cooking oil', price: 10.5,
-type: 'grocery', offer: {number: 3, percent: 20}}, {quantity: 11, id: 3, name: 'Instant cupcake mixture', price: 5, type: 'grocery',offer: {
+type: 'clothes'}, {quantity: 4, id: 6, name: 'Lip Tints', price: 12.75, type: 'beauty'}, {quantity: 2, id: 1, name: 'cooking oil', price: 10.5,
+type: 'grocery', offer: {number: 3, percent: 20}}, {quantity: 9, id: 3, name: 'Instant cupcake mixture', price: 5, type: 'grocery',offer: {
 number: 10, percent: 30}} 
 */
-var total = 0;
 var totalCartQuantity = 0;
+
+const listaCompra = document.getElementById('cart_list');
+const total_price = document.getElementById('total_price');
+const count_product = document.getElementById('count_product');
 
 // Exercise 1
 function buy(id) {
@@ -94,26 +94,38 @@ function buy(id) {
         found = Object.assign({quantity: 1}, found);
         //console.log("Objeto con la quantity añadida", found);
         cart.push(found);
-        console.log("Array cart con quantity", cart);
+        //console.log("Array cart con quantity", cart);
     }else{        
         cart[indice].quantity++;
         //console.log("He encontrado un objeto con el mismo id en cart", cart);
     }  
+    applyPromotionsCart(cart);
+    //console.log("Cart con promos en buy: ", cart);
+    count_product.innerText = `${cart.length}`;
 }
 
 // Exercise 2
 function cleanCart() {
     cart.length = 0;
-    total = 0;
-    document.getElementById("cart_list").innerHTML = '';
-    document.getElementById('total_price').textContent = 0;
-    document.getElementById('count_product').textContent = totalCartQuantity;
+    listaCompra.innerHTML = ``;
+    total_price.innerText = `0`;
+    count_product.innerText = `0`;
 }
 
 // Exercise 3
 function calculateTotal() {
     // Calculate total price of the cart using the "cartList" array
-    let total = cart.reduce((acumulador, producto) => acumulador + producto.price, 0);
+    let total = 0;
+    console.log("Cart limpia: ", cart);
+    applyPromotionsCart(cart);
+    console.log("Cart con promos: ", cart);
+    cart.forEach(productInCart => {        
+        total += productInCart.quantity * productInCart.price;
+        console.log("Cantidad en productInCart: ", productInCart.quantity);
+        console.log("Precio en productInCart: ", productInCart.price);
+        console.log("Total: ", total);
+    });
+
     return total; 
 }
 //console.log(calculateTotal());
@@ -121,24 +133,48 @@ function calculateTotal() {
 // Exercise 4
 function applyPromotionsCart() {
     // Apply promotions to each item in the array "cart"
-    let subtotalWithDiscount = 0;
     for (let i = 0; i < cart.length; i++){
-        //console.log(cart[i]);
-        if(cart[i].id == 1 && cart[i].quantity >= 3){
-            subtotalWithDiscount = (cart[i].price) * cart[i].quantity * 0.20;
-            console.log("Primer if", subtotalWithDiscount);
+        let product = products.find(product => product.id == cart[i].id);
+        if(product.offer && cart[i].quantity >= product.offer.number){
+            let discountedPrice = product.price - (product.price * (product.offer.percent / 100));
+            cart[i].price = discountedPrice;
+        }else{
+            cart[i].price = cart[i].price;
         }
-        if(cart[i].id == 3 && cart[i].quantity >= 10){
-            subtotalWithDiscount = (cart[i].price) * cart[i].quantity * 0.30;
-            console.log("Segundo if",subtotalWithDiscount);
-        }
+        //console.log(`Precio del articulo con el descuento:${cart[i].name} ${cart[i].price}`);
+        //console.log(cart);
     }    
 }
-applyPromotionsCart();
+//applyPromotionsCart();
 
 // Exercise 5
 function printCart() {
     // Fill the shopping cart modal manipulating the shopping cart dom
+    listaCompra.innerHTML= '';
+    total_price.innerText= '';
+
+    let cartList = document.getElementById("cart_list");
+    cartList.innerHTML = ''; 
+
+    cart.forEach(product => {
+        let subtotal = product.price * product.quantity;
+        let row = cartList.insertRow();
+
+        let cellName = row.insertCell(0);
+        cellName.textContent = product.name;
+
+        let cellPrice = row.insertCell(1);
+        cellPrice.textContent = product.price;
+
+        let cellQuantity = row.insertCell(2);
+        cellQuantity.textContent = product.quantity;
+
+        let cellTotal = row.insertCell(3);
+        cellTotal.textContent = `${subtotal.toFixed(2)}`;
+    });
+
+    let totalCart = calculateTotal();
+    document.getElementById("total_price").innerHTML = totalCart;
 }
 
 
@@ -154,8 +190,12 @@ function open_modal() {
 }
 
 
-//Custom functions
+/*Custom functions
 
 function updateCountProduct() {
     document.getElementById('count_product').textContent = totalCartQuantity;
-  }
+  }*/
+
+
+
+
