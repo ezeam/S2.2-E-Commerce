@@ -116,14 +116,14 @@ function cleanCart() {
 function calculateTotal() {
     // Calculate total price of the cart using the "cartList" array
     let total = 0;
-    console.log("Cart limpia: ", cart);
+    //console.log("Cart limpia: ", cart);
     applyPromotionsCart(cart);
-    console.log("Cart con promos: ", cart);
+    //console.log("Cart con promos: ", cart);
     cart.forEach(productInCart => {        
         total += productInCart.quantity * productInCart.price;
-        console.log("Cantidad en productInCart: ", productInCart.quantity);
-        console.log("Precio en productInCart: ", productInCart.price);
-        console.log("Total: ", total);
+        //console.log("Cantidad en productInCart: ", productInCart.quantity);
+        //console.log("Precio en productInCart: ", productInCart.price);
+        //console.log("Total: ", total);
     });
 
     return total; 
@@ -182,7 +182,19 @@ function printCart() {
 
 // Exercise 7
 function removeFromCart(id) {
+    let indiceProd = cart.findIndex((prod) => prod.id === id);
 
+    if(indiceProd != -1){
+        if(cart[indiceProd].quantity > 1){
+            cart[indiceProd].quantity--;
+        }
+        else if(cart[indiceProd].offer && cart[indiceProd].offer.number > cart[indiceProd].quantity){
+            //HAY QUE BORRAR EL SUBTOTAL Y RECALCULAR LOS PRECIOS
+        }
+        else{
+            cart.splice(indiceProd, 1);
+        }
+    }
 }
 
 function open_modal() {
