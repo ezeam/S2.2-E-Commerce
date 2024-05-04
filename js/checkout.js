@@ -1,100 +1,94 @@
 // Exercise 6
 function validate() {
-	
+  var error = 0;
+  // Get the input fields
+  var fName = document.getElementById("fName");
+  var fLastN = document.getElementById("fLastN");
+  var fEmail = document.getElementById("fEmail");
+  var fPassword = document.getElementById("fPassword");
+  var fAddress = document.getElementById("fAddress");
+  var fPhone = document.getElementById("fPhone");
 
-  // Obtener todos los formularios a los que queremos aplicar estilos de validación de Bootstrap personalizados
-  var forms = document.querySelectorAll('.needs-validation')
 
-  // Bucle sobre ellos y evitar el envío
-  Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-      form.addEventListener('submit', function (event) {
-        if (!form.checkValidity()) {
-          event.preventDefault()
-          event.stopPropagation()
+  const inputFields = [fName, fLastN, fEmail, fPassword, fAddress, fPhone];
+
+  let form = document.querySelector(".form.needs-validation");
+
+  form.addEventListener("submit", (e) => 
+    {
+    e.preventDefault();
+
+    inputFields.forEach((field, index) => {
+      const hasInvalidClass = field.classList.contains('is-invalid');
+      let hasPassedValidation = hasValidLength(field.value);
+      
+      if (hasPassedValidation) {
+        if (hasInvalidClass) {
+          field.classList.remove('is-invalid');          
         }
-				
-        form.classList.add('was-validated')
-      }, false)
-    })
-	var error = 0;
-	// Get the input fields
-	var fName = document.getElementById("fName");
-	var fEmail = document.getElementById("fEmail");
-	var fAddress = document.getElementById("fAddress");
-	var fLastN = document.getElementById("fLastN");
-	var fPassword = document.getElementById("fPassword");
-	var fPhone = document.getElementById("fPhone");
+      } else {
+        if (!hasInvalidClass)  {
+          field.classList.add('is-invalid');
+          return;          
+        }
+      }
 
-	const name = fName.value.trim();
-	const email = fEmail.value;
-	const address = fAddress.value;
-	const lastName = fLastN.value;
-	const password = fPassword.value;
-	const phone = fPhone.value;
+      const fieldValue = field.value;
+      hasPassedValidation = false;
 
-	// Get the error elements
-	var errorName = document.getElementById("errorName");
-	var errorEmail = document.getElementById("errorEmail");
-	var errorAdress = document.getElementById("errorAddress");
-	var errorLastN = document.getElementById("errorLastN");
-	var errorPassword = document.getElementById("errorPassword");
-	var errorPhone = document.getElementById("errorPhone");  
-	
-	// Validate fields entered by the user: name, phone, password, and email
+      switch (field.id) {
+        case 'fName':
+          hasPassedValidation = hasOnlyLetters(fieldValue); 
+          break;
+        case 'fLastN':
+          hasPassedValidation = hasOnlyLetters(fieldValue); 
+          break;
+        case 'fEmail':
+          hasPassedValidation = hasEmailFormat(fieldValue);
+          break;
+        case 'fPassword':
+          hasPassedValidation = hasValidPassword(fieldValue);
+          break;
+        case 'fPhone':
+          hasPassedValidation = hasOnlyDigits(fieldValue);
+          break;
+      }
 
-//NO FUNCIONA: EXPRESIÓN REGULAR DE IF NAME IF EMAIL IF PASSWORD, 
-//nombre y apellidos solo pueden tener letras y tlf solo números
+      if (!hasPassedValidation) {
+        field.classList.add('is-invalid');
+      }
 
-	//VALIDACIÓN DEL CAMPO NOMBRE:
-	if (!/^[a-zA-Z]+$/.test(fName.value.trim()) || fName.value == "" || fName.value.length < 3) {
-    errorName.innerText = "El campo no puede estar vacío, debe tener más de 3 caracteres y sólo contener letras";
-    //error++;
+    });
+  });
+}
+function hasValidLength(fieldValue) {
+  return fieldValue.length >= 3 && fieldValue !== "";
 }
 
-
-	//VALIDACIÓN DEL CAMPO EMAIL:
-	if(email === "" || email.length < 3 || !validaEmail(email)){
-		errorEmail.innerText = "El campo no puede estar vacío, debe tener al menos 3 letras y tener un formato correcto";
-		//error++;
-	}
-
-	//VALIDACIÓN DEL CAMPO DIRECCIÓN:
-	if(address === "" || address.length < 3){
-		errorAdress.innerText = "El campo no puede estar vacío no tener menos de 3 caracteres";
-		//error++;
-
-	}
-
-	//VALIDACIÓN DEL CAMPO APELLIDO:
-	if(lastName === "" || lastName.length < 3){
-		errorLastN.innerText = "El campo no puede estar vacío, debe tener más de 3 caracteres y sólo contener letras";
-		//error++;
-
-	}
-
-	//VALIDACIÓN DEL CAMPO CONTRASEÑA:
-	if(password == "" || password.length < 4 || password.length > 8 || password.match(er)){
-		errorPassword.innerText = "El campo no puede estar vacío, debe tener entre 4 y 8 caracteres y como mínimo un número";
-		//error++;
-	} 
-
-	//VALIDACIÓN DEL CAMPO TLF:
-	if(phone == "" || phone.length < 3){
-		errorPhone.innerText = "El campo teléfono no puede estar vacío";
-		//error++; 
-
-	}
-	 
-	/*if(error>0){
-		alert("Error");
-	}else{
-		alert("OK");
-	}*/
-
+function hasOnlyLetters(fieldValue) {
+  //+$ ensures one character
+  const regularExpression = new RegExp(/^[A-Za-z]+$/);
+  return regularExpression.test(fieldValue);
 }
 
-const validaEmail = (email) => {
-	console.log("Entras?");
-  return /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/.test(email);
+function hasOnlyDigits(fieldValue) {
+  //d for digit
+  const regularExpression = new RegExp(/^\d+$/);
+  return regularExpression.test(fieldValue);
+}
+
+function hasEmailFormat(fieldValue) {
+  //@ and .
+  const regularExpression = new RegExp(/\S+@\S+\.\S+/);
+  return regularExpression.test(fieldValue);
+}
+
+function hasValidPassword(fieldValue) {
+  const regExpAtLeastOneLetter = new RegExp(/[A-Za-z]/);
+  const regExpAtLeastOneNumber = new RegExp(/\d/);
+
+  const containsLetters = regExpAtLeastOneLetter.test(fieldValue);
+  const containsNumbers = regExpAtLeastOneNumber.test(fieldValue);
+
+  return containsLetters && containsNumbers;
 }

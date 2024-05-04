@@ -189,7 +189,7 @@ function removeFromCart(id) {
             cart[indiceProd].quantity--;
         }
         else if(cart[indiceProd].offer && cart[indiceProd].offer.number > cart[indiceProd].quantity){
-            //HAY QUE BORRAR EL SUBTOTAL Y RECALCULAR LOS PRECIOS
+            count_product--;
         }
         else{
             cart.splice(indiceProd, 1);
