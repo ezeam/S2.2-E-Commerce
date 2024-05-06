@@ -16,21 +16,9 @@ function validate(event) {
 	const address = fAddress.value;
 	const lastName = fLastN.value;
 	const password = fPassword.value;
-	const phone = fPhone.value;
-
-	// Get the error elements
-	var errorName = document.getElementById("errorName");
-	var errorEmail = document.getElementById("errorEmail");
-	var errorAdress = document.getElementById("errorAddress");
-	var errorLastN = document.getElementById("errorLastN");
-	var errorPassword = document.getElementById("errorPassword");
-	var errorPhone = document.getElementById("errorPhone");  
+	const phone = fPhone.value;  
 	
 	// Validate fields entered by the user: name, phone, password, and email
-
-//NO FUNCIONA: EXPRESIÓN REGULAR DE IF NAME IF EMAIL IF PASSWORD, 
-//nombre y apellidos solo pueden tener letras y tlf solo números
-//!/^[a-zA-Z]+$/.test(fName.value.trim()) 
 
 	//VALIDACIÓN DEL CAMPO NOMBRE:
 	if (hasOnlyLetters(name) && name != "" && name.length >= 3) {		
@@ -84,7 +72,6 @@ function validate(event) {
 
 //CUSTOM FUNCTIONS
 function verifyEmail(email){
-  console.log("Entras en verify email?");
   return /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email);
 }
 

@@ -71,11 +71,6 @@ var products = [
 
 // Improved version of cartList. Cart is an array of products (objects), but each one has a quantity field to define its quantity, so these products are not repeated.
 var cart = [];
-/*Datos de prueba {quantity: 2, id: 9, name: 'Toddler Frock', price: 9.99, type: 'clothes'}, {quantity: 1, id: 7, name: 'Lawn Dress', price: 15, 
-type: 'clothes'}, {quantity: 4, id: 6, name: 'Lip Tints', price: 12.75, type: 'beauty'}, {quantity: 2, id: 1, name: 'cooking oil', price: 10.5,
-type: 'grocery', offer: {number: 3, percent: 20}}, {quantity: 9, id: 3, name: 'Instant cupcake mixture', price: 5, type: 'grocery',offer: {
-number: 10, percent: 30}} 
-*/
 var totalCartQuantity = 0;
 
 const listaCompra = document.getElementById('cart_list');
@@ -86,21 +81,16 @@ const count_product = document.getElementById('count_product');
 function buy(id) {
     // 1. Loop for to the array products to get the item to add to cart
     let found = products.find(product => product.id === id);
-    //console.log("Objeto que queremos añadir al carrito: ", found);
+    
     // 2. Add found product to the cart array
     let indice = cart.findIndex((producto) => producto.id == id);
     if(indice == -1){
-        //console.log("NO he encontrado un objeto con el mismo id en cart");
         found = Object.assign({quantity: 1}, found);
-        //console.log("Objeto con la quantity añadida", found);
         cart.push(found);
-        //console.log("Array cart con quantity", cart);
     }else{        
         cart[indice].quantity++;
-        //console.log("He encontrado un objeto con el mismo id en cart", cart);
     }  
     applyPromotionsCart(cart);
-    //console.log("Cart con promos en buy: ", cart);
     count_product.innerText = `${cart.length}`;
 }
 
@@ -116,19 +106,13 @@ function cleanCart() {
 function calculateTotal() {
     // Calculate total price of the cart using the "cartList" array
     let total = 0;
-    //console.log("Cart limpia: ", cart);
     applyPromotionsCart(cart);
-    //console.log("Cart con promos: ", cart);
     cart.forEach(productInCart => {        
         total += productInCart.quantity * productInCart.price;
-        //console.log("Cantidad en productInCart: ", productInCart.quantity);
-        //console.log("Precio en productInCart: ", productInCart.price);
-        //console.log("Total: ", total);
     });
 
     return total; 
 }
-//console.log(calculateTotal());
 
 // Exercise 4
 function applyPromotionsCart() {
@@ -141,8 +125,6 @@ function applyPromotionsCart() {
         }else{
             cart[i].price = cart[i].price;
         }
-        //console.log(`Precio del articulo con el descuento:${cart[i].name} ${cart[i].price}`);
-        //console.log(cart);
     }    
 }
 //applyPromotionsCart();
@@ -174,7 +156,7 @@ function printCart() {
     });
 
     let totalCart = calculateTotal();
-    document.getElementById("total_price").innerHTML = totalCart;
+    document.getElementById("total_price").innerHTML = totalCart.toFixed(2);
 }
 
 
